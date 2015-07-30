@@ -1,4 +1,10 @@
-module ActiveJobRnf
-  class Engine < ::Rails::Engine
+module ActiveJob
+  module RNF
+    class Engine < ::Rails::Engine
+
+      config.to_prepare do
+        ActiveJob::Base.send :include, ActiveJob::RNF
+      end
+    end
   end
 end
