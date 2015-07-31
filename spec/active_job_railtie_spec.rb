@@ -39,8 +39,8 @@ EOSQL
   end
 
   class ExampleJob < ActiveJob::Base
-    def perform(record)
-      record.action!(job_id)
+    def perform(*record)
+      Array(record).each {|r| r.action!(job_id) }
     end
   end
 
@@ -59,6 +59,15 @@ EOSQL
 
   context 'with other errors' do
     let(:record) { ExampleRecordWithErrors.create }
+
+    let(:serialized_job) do
+      ExampleJob.new.serialize.tap { |job| job['arguments'] = [Object.new] }
+    end
+
+    it 'is picky about the origin of the DeserializationError' do
+      expect { ExampleJob.execute serialized_job }.
+        to raise_error ActiveJob::DeserializationError
+    end
 
     it 'raises other error' do
       job = ExampleJob.perform_later(record)
