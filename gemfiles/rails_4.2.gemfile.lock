@@ -1,7 +1,7 @@
 PATH
   remote: ../
   specs:
-    active_job-rnf (0.2.0)
+    active_job-rnf (0.3.0)
       rails (>= 4.2.0, < 5.1)
 
 GEM
